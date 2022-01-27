@@ -8,7 +8,10 @@ class bank:
         self.__run_system()
     #Checks if ssn is valid
     def __check_ssn(self, ssn):
-        self.ds.check_valid_ssn(ssn)  # Checks if input is valid
+        try:
+            self.ds.check_valid_ssn(ssn)  # Checks if input is valid
+        except:
+            return -1
         if open('state.txt', 'r').read(1) == '0':
             print("No customer with entered ssn")
             self.__state.seek(0)
@@ -43,7 +46,7 @@ class bank:
                     if self.__check_ssn(ssn) == -1:
                         print("ssn didn't exist, check if valid format")
                         continue
-                    account.create_account(self.ds, self.__state)
+                    account.create_account(ssn, self.ds, self.__state)
                     break   
             elif inp == '6':
                 while True:
@@ -71,8 +74,7 @@ class bank:
                     if self.__check_ssn(ssn) == -1:
                         print("Invalid input, either ssn doesn't exist or no accounts connected")
                         return
-                    customer.get_all_transactions(ssn, self.ds, self.__state)
-                    break 
+                    customer.get_all_transactions(ssn, self.ds, self.__state) 
             elif inp == '8':
                 while True:
                     print("Enter ssn. 'e' to exit")

@@ -1,9 +1,9 @@
+from lib2to3.pytree import Base
 from transaction import transaction
 from account import account
 class customer:
     
-    def __init__(self, id, nm, ssn):
-        self.id = id
+    def __init__(self, nm, ssn):
         self.name = nm
         self.ssn = ssn #Social security number
 
@@ -15,8 +15,8 @@ def print_customers(ds, state):
         a = ""
         #3 first lines in line is id,name,ssn and the rest is account info of length 3
         for l in range((len(line)-1)//3):
-            a += f"\n       {line[l*3+3]}       {line[l*3+4]}       {line[l*3+5]} "
-        print(f"id: {line[0]}  Name: {line[1]}   ssn:{line[2]}\n     Account id    Account type       Balance{a}")
+            a += f"\n       {line[l*3+2]}       {line[l*3+3]}       {line[l*3+4]} "
+        print(f"Name: {line[0]}   ssn:{line[1]}\n     Account id    Account type       Balance{a}")
 
 #Deposits after inpput of ssn and acc id
 def deposit(ssn, ds, state):
@@ -59,15 +59,13 @@ def withdraw(ssn, ds, state):
     # finds accounts with ssn and writes to state
     ds.find_accounts_by_ssn(ssn)
     if state.read():  # Checks whether or not accounts exists with given input
-        state.seek(0)
         while True:
+            state.seek(0)
             accounts = []
             for line in state:
                 line = line.strip().split(':')
-                print(
-                    f"Id:{line[0]} Type:{line[1]} Balance:{line[2]}")
-                accounts.append(
-                    account(int(line[0]), line[1], float(line[2])))
+                print(f"Id:{line[0]} Type:{line[1]} Balance:{line[2]}")
+                accounts.append(account(int(line[0]), line[1], float(line[2])))
             print("Enter id to Withdraw from 'e' to exit")
             i = input()
             if i == 'e':
@@ -113,7 +111,7 @@ def get_customer(ssn, ds, state):
         if state.read():  # Checks if customer exists
             state.seek(0)
             line = state.readline().strip().replace('#', '').split(":")
-            print(f"id: {line[0]}  Name: {line[1]}   ssn:{line[2]}")
+            print(f"Name: {line[0]}   ssn:{line[1]}")
             return
         else:
             print("No customer with that ssn")
@@ -150,34 +148,27 @@ def change_customer_name(ds, state):
             ssn = int(ssn)
             ds.find_customer_by_ssn(ssn)
             state.seek(0)
-            id, nm, s = state.readline().strip().split(':')  # Reads id, name and ssn from state
+            nm, s = state.readline().strip().split(':')  # Reads id, name and ssn from state
             n = input("Enter new name\n")
             # Creates new customer object from old info and input
-            ds.update_customer(customer(id, n, ssn))
+            ds.update_customer(customer(n, ssn))
             return
         #Handles exception if ssn is invalid
-        except:
+        except BaseException as e:
+            print(e) 
             print("Enter a valid id")
 #Creates a customer after input of name and ssn
 def create_customer(ds, state):
     while True:
         n = input("Enter name\n")
-        try:
-            ssn = int(input("Enter ssn (12 numbers)\n"))
-            if len(str(ssn)) != 12:
-                print("enter valid length of ssn (12)")
-                continue
-            # Requests the highest used customer id
-            ds.get_valid_id("user")
-            state.seek(0)
-            i = int(state.readline().strip())+1
-        except:
-            print("Please enter valid ssn")
+        ssn = int(input("Enter ssn (12 numbers)\n"))
+        if len(str(ssn)) != 12:
+            print("enter valid length of ssn (12)")
             continue
         try:
-            ds.create_customer(customer(i, n, ssn))
+            ds.create_customer(customer(n, ssn))
             break
         except:
             print("Customer already exists with ssn")
             return
-    print(f"Created customer with id {i}")
+    print(f"Created customer with ssn {ssn}")

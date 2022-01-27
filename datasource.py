@@ -18,7 +18,7 @@ class datasource:
         self.__db.commit()    
     #Creates a customer based on customer object c
     def create_customer(self, c):
-        self.__db.execute(f"INSERT INTO user VALUES ({c.id}, '{c.name}', {c.ssn})")
+        self.__db.execute(f"INSERT INTO user VALUES ('{c.name}', {c.ssn})")
         self.__db.commit()
     #Connects to database, database name as parameter db_name
     def datasource_conn(self, db_name):
@@ -36,7 +36,7 @@ class datasource:
     def find_customer_by_ssn(self, ssn):
         try:
             c = self.__db.execute(f"SELECT * FROM user WHERE ssn = {ssn}").fetchone()
-            open('state.txt', 'w').write(f"{c[0]}:{c[1]}:{c[2]}")
+            open('state.txt', 'w').write(f"{c[0]}:{c[1]}")
         except:
             pass
     #Uses a customer object as paramter
@@ -52,10 +52,8 @@ class datasource:
     def get_all(self):
         dct = {}
         for row in self.__db.execute(f"SELECT * FROM user"):
-            dct[row[2]] = {}
-            dct[row[2]]['id'] = row[0]
-            dct[row[2]]['name'] = row[1]
-            dct[row[2]]['account'] = []
+            print(row)
+            dct[row[1]] = {'name': row[0], 'account': []}
         
         for row in self.__db.execute(f"SELECT * FROM accounts"):
             dct[row[1]]['account'].append({'id':row[0], 'tpe':row[2], 'balance':row[3]})
@@ -65,7 +63,7 @@ class datasource:
             lnth = len(dct[key]['account'])
             for l in range(lnth):
                 acc += f":{dct[key]['account'][l]['id']}:{dct[key]['account'][l]['tpe']}:{dct[key]['account'][l]['balance']}"
-            f.write(f"{dct[key]['id']}:{dct[key]['name']}:{key}{acc}\n")
+            f.write(f"{dct[key]['name']}:{key}{acc}\n")
     #Writes the highest valid id to state, table name as paramater
     def get_valid_id(self, table):
         i = self.__db.execute(
@@ -93,7 +91,7 @@ class datasource:
         self.__db.commit()
     #Updates a customer object
     def update_customer(self, c):
-        self.__db.execute(f"UPDATE user SET name = '{c.name}' WHERE id = {c.id}")
+        self.__db.execute(f"UPDATE user SET name = '{c.name}' WHERE ssn = {c.ssn}")
         self.__db.commit()
     #Updates a account object
     def update_account(self, a):
