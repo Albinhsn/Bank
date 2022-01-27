@@ -23,12 +23,6 @@ class datasource:
     #Connects to database, database name as parameter db_name
     def datasource_conn(self, db_name):
         return sqlite3.connect(db_name)   
-    #Finds a customer and writes it to state
-    def find_customer_by_id(self,id):
-        l = self.__db.execute(f"SELECT * FROM user WHERE id = {id}").fetchone()
-        f = open('state.txt', 'w')
-        f.write(f"{l[0]}:{l[1]}:{l[2]}")
-        f.close()
     #Finds account(s) by ssn and writes to state
     def find_accounts_by_ssn(self,ssn):
         f = open('state.txt', 'w')

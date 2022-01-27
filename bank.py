@@ -5,9 +5,9 @@ class bank:
     def __init__(self):
         print("Welcome to the bank!")
         self._load()
-        self.run_system()
+        self.__run_system()
     #Checks if ssn is valid
-    def check_ssn(self, ssn):
+    def __check_ssn(self, ssn):
         self.ds.check_valid_ssn(ssn)  # Checks if input is valid
         if open('state.txt', 'r').read(1) == '0':
             print("No customer with entered ssn")
@@ -15,7 +15,7 @@ class bank:
             return -1
     
     #Main loop/Main Menu
-    def run_system(self): 
+    def __run_system(self): 
         while True:
             inp = input("1. Print ALL customers\n2. Add customer\n3. Change customer name\n4. Remove customer\n5. Create account\n6. Remove Account\n7. Print transactions by account\n8. Print accounts\n9.Withdraw\n10. Deposit\n11. Print customer info\n'E'. Exit\n")
             if inp == '1':
@@ -40,7 +40,7 @@ class bank:
                     except:
                         print("ssn didn't exist, check if valid format")
                         continue
-                    if self.check_ssn(ssn) == -1:
+                    if self.__check_ssn(ssn) == -1:
                         print("ssn didn't exist, check if valid format")
                         continue
                     account.create_account(self.ds, self.__state)
@@ -57,7 +57,7 @@ class bank:
                     except:
                         print("ssn didn't exist, check if valid format")
                         continue
-                    if self.check_ssn(ssn) == -1:
+                    if self.__check_ssn(ssn) == -1:
                         print("ssn didn't exist, check if valid format")
                         continue
                     account.remove_account(ssn, self.ds, self.__state)
@@ -68,7 +68,7 @@ class bank:
                     ssn = input()
                     if ssn == 'e':
                         return
-                    if self.check_ssn(ssn) == -1:
+                    if self.__check_ssn(ssn) == -1:
                         print("Invalid input, either ssn doesn't exist or no accounts connected")
                         return
                     customer.get_all_transactions(ssn, self.ds, self.__state)
@@ -79,7 +79,7 @@ class bank:
                     ssn = input()
                     if ssn == 'e':
                         return
-                    if self.check_ssn(ssn) == -1:
+                    if self.__check_ssn(ssn) == -1:
                         return
                     account.print_accounts(ssn, self.ds, self.__state)
                     break
@@ -89,7 +89,7 @@ class bank:
                     ssn = input()
                     if ssn == 'e':
                         return
-                    if self.check_ssn(ssn) == -1:  # Check if input is valid
+                    if self.__check_ssn(ssn) == -1:  # Check if input is valid
                         print("No customer with that ssn")
                         continue
                     break
@@ -99,7 +99,7 @@ class bank:
                     ssn = input("Enter ssn to deposit into account. 'e' to exit\n")
                     if ssn == 'e':
                         return
-                    if self.check_ssn(ssn) == -1:
+                    if self.__check_ssn(ssn) == -1:
                         print("Invalid ssn")
                         continue
                     break
@@ -108,21 +108,21 @@ class bank:
                 print("Enter ssn to find customer information.   'e' to exit")
                 ssn = input()
                 if(ssn == 'e'):
-                    return
+                    continue
                 customer.get_customer(ssn, self.ds, self.__state)
             elif(inp == 'E'):
                 print("Thanks for using the bank")
                 exit()
             else:
                 print("Wrong input try again")
-            self.update_state() #Removes state file and puts state cursor at position 0 
+            self.__update_state() #Removes state file and puts state cursor at position 0 
     #Loads datasource and opens state file
     def _load(self):
         self.ds = datasource()
         self.__state = open('state.txt', 'r+')
     
     #Removes current state and puts file cursor at 0
-    def update_state(self):
+    def __update_state(self):
         self.__state.truncate(0)
         self.__state.seek(0)
     

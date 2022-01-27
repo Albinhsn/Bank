@@ -144,18 +144,18 @@ def get_all_transactions(ssn, ds, state):
 def change_customer_name(ds, state):
     while True:
         try:
-            i = input("Enter id for customer. 'e' to exit\n")
-            if i == 'e':
+            ssn = input("Enter ssn for customer. 'e' to exit\n")
+            if ssn == 'e':
                 return
-            i = int(i)
-            ds.find_customer_by_id(i)
+            ssn = int(ssn)
+            ds.find_customer_by_ssn(ssn)
             state.seek(0)
-            id, nm, ssn = state.readline().strip().split(':')  # Reads id, name and ssn from state
+            id, nm, s = state.readline().strip().split(':')  # Reads id, name and ssn from state
             n = input("Enter new name\n")
             # Creates new customer object from old info and input
             ds.update_customer(customer(id, n, ssn))
             return
-        #Handles exception if input is invalid (customer id)
+        #Handles exception if ssn is invalid
         except:
             print("Enter a valid id")
 #Creates a customer after input of name and ssn
