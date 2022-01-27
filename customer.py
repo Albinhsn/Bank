@@ -1,4 +1,3 @@
-from lib2to3.pytree import Base
 from transaction import transaction
 from account import account
 class customer:
