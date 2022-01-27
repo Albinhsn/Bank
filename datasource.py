@@ -41,8 +41,11 @@ class datasource:
         f.close()
     #Finds customer by ssn and writes to state
     def find_customer_by_ssn(self, ssn):
-        c = self.__db.execute(f"SELECT * FROM user WHERE ssn = {ssn}").fetchone()
-        open('state.txt', 'w').write(f"{c[0]}:{c[1]}:{c[2]}")
+        try:
+            c = self.__db.execute(f"SELECT * FROM user WHERE ssn = {ssn}").fetchone()
+            open('state.txt', 'w').write(f"{c[0]}:{c[1]}:{c[2]}")
+        except:
+            pass
     #Uses a customer object as paramter
     def find_transactions_by_id(self, acc_id):
         f = open('state.txt', 'w')
@@ -82,7 +85,7 @@ class datasource:
     #Removes account and corresponding transaction by id
     def remove_account(self,id):
         b = self.__db.execute(f"SELECT balance from accounts WHERE id = {id}").fetchone()
-        print(f"Balance: {b}")        
+        print(f"Balance: {b}[0]")        
         self.__db.execute(f"DELETE FROM accounts WHERE id = {id}")
         self.__db.execute(f"DELETE FROM transactions WHERE account_id = {id}")
         self.__db.commit()  
