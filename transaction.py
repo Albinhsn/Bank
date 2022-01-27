@@ -7,7 +7,7 @@ class transaction:
         # Creates a date based on current time in format m/d/y
         self.date = datetime.datetime.now().strftime("%m/%d/%y")
         self.amount = amount
-        ds.get_valid_id("transactions") #Requests highest used transaction id in state
+        ds._get_valid_id("transactions") #Requests highest used transaction id in state
         self.id = int(open('state.txt', 'r').readline().strip())+1  #reads the requested id and adds 1 to make it valid
-        ds.create_transaction(self) #Creates a transaction in database based on object
+        ds._create_transaction(self) #Creates a transaction in database based on object
 

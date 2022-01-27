@@ -8,7 +8,7 @@ class customer:
 
 #Prints every customer
 def print_customers(ds, state):
-    ds.get_all()  # Requests all customers from datasource
+    ds._get_all()  # Requests all customers from datasource
     for line in state:
         line = line.strip().split(':')
         a = ""
@@ -20,7 +20,7 @@ def print_customers(ds, state):
 #Deposits after inpput of ssn and acc id
 def deposit(ssn, ds, state):
     # Sends requests for accounts with assigned ssn
-    ds.find_accounts_by_ssn(ssn)
+    ds._find_accounts_by_ssn(ssn)
     if state.read():
         state.seek(0)
         accounts = []
@@ -44,10 +44,11 @@ def deposit(ssn, ds, state):
                         # Creates a transaction for account with given amount
                         a.change_balance(amount)
                         # Sends update request to datasource
-                        ds.update_account(a)
+                        ds._update_account(a)
                         transaction(a.id, amount, ds)
                         return
-                    except:
+                    except BaseException as e:
+                        print(e)
                         print("Enter valid amount please")
         print("Enter a valid account id please")
     print("No accounts belonging to ssn")
@@ -56,7 +57,7 @@ def deposit(ssn, ds, state):
 #Withdraw after inpput of ssn and acc id
 def withdraw(ssn, ds, state):
     # finds accounts with ssn and writes to state
-    ds.find_accounts_by_ssn(ssn)
+    ds._find_accounts_by_ssn(ssn)
     if state.read():  # Checks whether or not accounts exists with given input
         while True:
             state.seek(0)
@@ -83,7 +84,7 @@ def withdraw(ssn, ds, state):
                                 # Changes balance with given amount
                                 a.change_balance(amount)
                                 # Sends update request for account
-                                ds.update_account(a)
+                                ds._update_account(a)
                                 # Creates a transaction
                                 transaction(a.id, amount, ds)
                                 return
@@ -98,7 +99,7 @@ def remove_customer(ssn, ds):
     try:
         ssn = int(ssn)
         # This function can break with wrong input
-        ds.remove_customer_by_ssn(ssn)
+        ds._remove_customer_by_ssn(ssn)
         return
     #Handles exception if ssn input is invalid
     except:
@@ -106,7 +107,7 @@ def remove_customer(ssn, ds):
 
 #Prints customer info by ssn
 def get_customer(ssn, ds, state):
-        ds.find_customer_by_ssn(ssn)
+        ds._find_customer_by_ssn(ssn)
         if state.read():  # Checks if customer exists
             state.seek(0)
             line = state.readline().strip().replace('#', '').split(":")
@@ -114,10 +115,10 @@ def get_customer(ssn, ds, state):
             return
         else:
             print("No customer with that ssn")
-
+#Prints all transactions after ssn and account id input
 def get_all_transactions(ssn, ds, state):
     while True:
-        ds.find_accounts_by_ssn(ssn)
+        ds._find_accounts_by_ssn(ssn)
         a = []
         for line in state:
             line = line.strip().split(':')
@@ -128,7 +129,7 @@ def get_all_transactions(ssn, ds, state):
         if i == 'e':
             return
         elif i in a:
-            ds.find_transactions_by_id(i)
+            ds._find_transactions_by_id(i)
             print(f"Account: {i}")
             state.seek(0)
             for line in state:
@@ -137,7 +138,7 @@ def get_all_transactions(ssn, ds, state):
             return
         else:
             print("Enter a valid account id please")
-
+#Changes customer name after ssn input
 def change_customer_name(ds, state):
     while True:
         try:
@@ -145,19 +146,19 @@ def change_customer_name(ds, state):
             if ssn == 'e':
                 return
             ssn = int(ssn)
-            ds.find_customer_by_ssn(ssn)
+            ds._find_customer_by_ssn(ssn)
             state.seek(0)
             nm, s = state.readline().strip().split(':')  # Reads id, name and ssn from state
             n = input("Enter new name\n")
             # Creates new customer object from old info and input
-            ds.update_customer(customer(n, ssn))
+            ds._update_customer(customer(n, ssn))
             return
         #Handles exception if ssn is invalid
         except BaseException as e:
             print(e) 
             print("Enter a valid id")
 #Creates a customer after input of name and ssn
-def create_customer(ds, state):
+def create_customer(ds):
     while True:
         n = input("Enter name\n")
         ssn = int(input("Enter ssn (12 numbers)\n"))
@@ -165,7 +166,7 @@ def create_customer(ds, state):
             print("enter valid length of ssn (12)")
             continue
         try:
-            ds.create_customer(customer(n, ssn))
+            ds._create_customer(customer(n, ssn))
             break
         except:
             print("Customer already exists with ssn")

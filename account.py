@@ -22,7 +22,7 @@ class account:
 #Closes account for customer after ssn and account id input
 def remove_account(ssn, ds, state):
         # Requests accounts by ssn from datasource
-        ds.find_accounts_by_ssn(ssn)
+        ds._find_accounts_by_ssn(ssn)
         if state.read():
             state.seek(0)
             acc_ids = []
@@ -37,7 +37,7 @@ def remove_account(ssn, ds, state):
                 return
             if i in acc_ids:
                 # Removes the account if input is valid
-                ds.remove_account(i)
+                ds._remove_account(i)
                 return
             else:
                 print("Enter a valid account id please")
@@ -45,7 +45,7 @@ def remove_account(ssn, ds, state):
         return
 #Prints accounts belonging to ssn
 def print_accounts(ssn, ds, state):
-    ds.find_accounts_by_ssn(ssn)  # Requests accounts to state
+    ds._find_accounts_by_ssn(ssn)  # Requests accounts to state
     if state.read():
         state.seek(0)
         for line in state:
@@ -59,7 +59,7 @@ def create_account(ssn, ds, state):
         try:
             tpe = input("Choose account type:\n1. debit account 2. savings account 'e' to exit\n")
             # Requests valid account id to state
-            ds.get_valid_id("accounts")
+            ds._get_valid_id("accounts")
             acc_id = int(state.readline().strip())+1
             if tpe == '1' or tpe == '2':
                 if tpe == '1':
@@ -67,7 +67,7 @@ def create_account(ssn, ds, state):
                 else:
                     tpe = "savings account"
                 # Sends request to open account
-                ds.open_account(account(acc_id, tpe, 0), ssn)
+                ds._open_account(account(acc_id, tpe, 0), ssn)
                 print(f"Account added with account number: {acc_id}")
                 return
             elif tpe == 'e':
