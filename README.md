@@ -32,11 +32,12 @@ Jag planerade inga tasks innan arbetet, då projektet flöt på väldigt snabbt 
 Länkar
 Github:
 https://github.com/Albinhsn/bank
+
 Class diagram:
 https://lucid.app/lucidchart/cd547b12-89f1-46bd-86e4-1b0a0eeb3183/edit?invitationId=inv_4d7af25c-a72f-4e5c-8998-5814b315c951
+
 ER Diagram:
 https://whimsical.com/QY4jayzfSBjPVNnDdGHLhq
-(Skärm dumpar finns under ifall du inte har tillgång via länkarna)  
 
 ![bankCLASS](https://user-images.githubusercontent.com/89841505/151412553-1f99d7d4-6e2e-4b2d-b65e-b021e1fde25f.png)
 ![bankER](https://user-images.githubusercontent.com/89841505/151412576-ecf5baef-afa1-4271-9200-97c0a3d6577e.png)
