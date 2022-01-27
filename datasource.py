@@ -1,4 +1,3 @@
-#Check private vs public
 import sqlite3
 class datasource:   
     
@@ -85,7 +84,7 @@ class datasource:
     #Removes account and corresponding transaction by id
     def remove_account(self,id):
         b = self.__db.execute(f"SELECT balance from accounts WHERE id = {id}").fetchone()
-        print(f"Balance: {b}[0]")        
+        print(f"Balance: {b[0]}")        
         self.__db.execute(f"DELETE FROM accounts WHERE id = {id}")
         self.__db.execute(f"DELETE FROM transactions WHERE account_id = {id}")
         self.__db.commit()  

@@ -18,7 +18,6 @@ class bank:
     def run_system(self): 
         while True:
             inp = input("1. Print ALL customers\n2. Add customer\n3. Change customer name\n4. Remove customer\n5. Create account\n6. Remove Account\n7. Print transactions by account\n8. Print accounts\n9.Withdraw\n10. Deposit\n11. Print customer info\n'E'. Exit\n")
-            self.update_state()
             if inp == '1':
                 customer.print_customers(self.ds, self.__state)
             elif inp == '2':
@@ -44,7 +43,7 @@ class bank:
                     if self.check_ssn(ssn) == -1:
                         print("ssn didn't exist, check if valid format")
                         continue
-                    account.create_account(ssn, self.ds, self.__state)
+                    account.create_account(self.ds, self.__state)
                     break   
             elif inp == '6':
                 while True:
@@ -116,7 +115,7 @@ class bank:
                 exit()
             else:
                 print("Wrong input try again")
-    
+            self.update_state() #Removes state file and puts state cursor at position 0 
     #Loads datasource and opens state file
     def _load(self):
         self.ds = datasource()
@@ -126,4 +125,5 @@ class bank:
     def update_state(self):
         self.__state.truncate(0)
         self.__state.seek(0)
-        
+    
+
